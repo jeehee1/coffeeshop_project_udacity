@@ -1,5 +1,6 @@
 # from crypt import methods
 import os
+from xml.dom.pulldom import ErrorHandler
 from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
@@ -18,7 +19,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this function will add one
 '''
-db_drop_and_create_all()
+# db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -31,8 +32,7 @@ db_drop_and_create_all()
 '''
 
 @app.route('/drinks', methods=['GET'])
-@requires_auth('get:drinks')
-def get_drinks(jwt):
+def get_drinks():
     get_drinks = Drink.query.order_by(Drink.id).all()
     drinks = []
     try:
@@ -51,8 +51,6 @@ def get_drinks(jwt):
             }, 404)
     except ValueError as e:
         print(e)
-
-
 
 
 '''
@@ -114,6 +112,14 @@ def unprocessable(error):
         "error": 422,
         "message": "unprocessable"
     }), 422
+
+@app.errorhandler(401)
+def unvalid_token(error):
+    return jsonify({
+        "success" : False,
+        "error" : 401,
+        "message" : "Token is unvalid."
+    }), 401
 
 
 '''
