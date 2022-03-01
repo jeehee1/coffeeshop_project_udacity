@@ -6,7 +6,7 @@ from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
-from backend.src import auth
+# from backend.src import auth
 
 
 AUTH0_DOMAIN = 'cafe-project.eu.auth0.com'
@@ -109,7 +109,7 @@ def check_permissions(permission, payload):
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
-    unverified_header = jwks.get_unverified_header(token)
+    unverified_header = jwt.get_unverified_header(token)
     rsa_key = {}
     if 'kid' not in unverified_header:
         raise AuthError({
