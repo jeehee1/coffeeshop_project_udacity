@@ -63,8 +63,8 @@ def get_drinks():
 '''
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
-def get_drinks_detail():
-    get_drinks = Drink.query.ordery_by(Drink.id).all()
+def get_drinks_detail(payload):
+    get_drinks = Drink.query.order_by(Drink.id).all()
     drinks = []
     try:
         if len(get_drinks) > 0:
