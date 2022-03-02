@@ -127,6 +127,13 @@ def get_drinks_detail():
 Example error handling for unprocessable entity
 '''
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "success" : False,
+        "error" : 404,
+        "message" : "NotFound"
+    })
 
 @app.errorhandler(422)
 def unprocessable(error):
