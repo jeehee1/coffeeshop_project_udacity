@@ -1,5 +1,8 @@
 # from crypt import methods
+from multiprocessing.sharedctypes import Value
 import os
+from turtle import title
+from urllib import response
 from xml.dom.pulldom import ErrorHandler
 from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
@@ -19,7 +22,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this function will add one
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -96,6 +99,28 @@ def get_drinks_detail(payload):
         or appropriate status code indicating reason for failure
 '''
 
+@app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
+def create_drink(payload):
+    body = json.loads(request.data.decode('utf-8'))
+    try:
+        if 'title' in body and 'recipe' in body:
+            drink_title = body['title']
+            drink_recipe = json.dumps(body['recipe'])
+            drink = Drink(title=drink_title, recipe=drink_recipe)
+            drink.insert()
+            return jsonify({
+                "success" : True,
+                "drinks" : drink.long()
+            }), 200
+        else:
+            return jsonify({
+                "success" : False,
+                "error" : 422,
+                "message" : "no title or no recipe in body"
+            }), 422
+    except ValueError as e:
+        print(e)
 
 '''
 @TODO implement endpoint
