@@ -43,13 +43,13 @@ def get_drinks():
             return jsonify({
                 'success' : True,
                 'drinks' : drinks
-            })
+            }), 200
 
         elif len(get_drinks) == 0:
             return jsonify({
                 'success' : False,
                 'erorr' : 'Unable to find drinks'
-            }, 404)
+            }), 404
     except ValueError as e:
         print(e)
 
@@ -82,8 +82,6 @@ def get_drinks_detail(payload):
                 'success' : False,
                 'erorr' : 'Unable to find drinks'
             }), 404
-
-
     except ValueError as e:
         print(e)
 
