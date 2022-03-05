@@ -181,20 +181,13 @@ def delete_drink(token, drink_id):
 Example error handling for unprocessable entity
 '''
 
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({
-        "success" : False,
-        "error" : 404,
-        "message" : "NotFound"
-    })
 
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
         "success": False,
         "error": 422,
-        "message": "unprocessable"
+        "message": "Unprocessable"
     }), 422
 
 @app.errorhandler(401)
@@ -204,6 +197,14 @@ def unvalid_token(error):
         "error" : 401,
         "message" : "Token is unvalid."
     }), 401
+
+@app.errorhandler(403)
+def unauthorized(error):
+    return jsonify({
+        "success" : False,
+        "error" : 403,
+        "message" : "Unauthorized request"
+    }), 403
 
 
 '''
@@ -216,17 +217,30 @@ def unvalid_token(error):
                     }), 404
 
 '''
-
 '''
 @TODO implement error handler for 404
     error handler should conform to general task above
 '''
-
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "success" : False,
+        "error" : 404,
+        "message" : "NotFound"
+    }), 404
 
 '''
 @TODO implement error handler for AuthError
     error handler should conform to general task above
 '''
+@app.errorhandler(AuthError)
+def auth_error(auth):
+    return jsonify({
+        'success' : False,
+        'error': auth.error,
+        'status_code' : auth.status_code
+    })
+
 
 if __name__ == "__main__":
     app.debug = True
