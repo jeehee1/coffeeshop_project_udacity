@@ -190,14 +190,6 @@ def unprocessable(error):
         "message": "Unprocessable"
     }), 422
 
-@app.errorhandler(401)
-def unvalid_token(error):
-    return jsonify({
-        "success" : False,
-        "error" : 401,
-        "message" : "Token is unvalid."
-    }), 401
-
 @app.errorhandler(403)
 def unauthorized(error):
     return jsonify({
