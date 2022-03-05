@@ -190,14 +190,6 @@ def unprocessable(error):
         "message": "Unprocessable"
     }), 422
 
-@app.errorhandler(403)
-def unauthorized(error):
-    return jsonify({
-        "success" : False,
-        "error" : 403,
-        "message" : "Unauthorized request"
-    }), 403
-
 
 '''
 @TODO implement error handlers using the @app.errorhandler(error) decorator
