@@ -1,5 +1,3 @@
-# from crypt import methods
-from multiprocessing.sharedctypes import Value
 import os
 from turtle import title
 from urllib import response
@@ -22,7 +20,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this function will add one
 '''
-db_drop_and_create_all()
+# db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -133,6 +131,28 @@ def create_drink(payload):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks/<int:drink_id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def patch_drink(token, drink_id):
+    body = json.loads(request.data.decode('utf-8'))
+    drink_title = body.get('title', None)
+    drink_recipe = json.dumps(body.get('recipe', None))
+    try:
+        drink = Drink.query.filter(Drink.id==drink_id).one_or_none()
+        if drink is None:
+            abort(404)
+        else:
+            drink.title = drink_title
+            drink.recipe = drink_recipe
+            drink.update()
+            return jsonify({
+                'success' : True,
+                'drinks' : drink.long()
+            }), 200
+    except ValueError as e:
+        print(e)
+        abort(422)
+        
 
 
 '''
